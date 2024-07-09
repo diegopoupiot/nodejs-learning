@@ -1,21 +1,14 @@
 require('babel-register')
-const os = require('os') // infos sur le système d'exploitation
-const fs = require('fs') // gestion des fichiers
 const http = require('http') // serveur http
 
-console.log(os.arch())
-console.log(os.hostname())
+http.createServer((req, res) => {
 
-fs.readFile('test.txt', 'utf-8', (err, data) => {
-    if (err) {
-        console.error('Impossible de lire le fichier')
+    if (req.url === '/') {
+        res.writeHead(200, { 'Content-Type': 'text/html' })
+        res.write("<h1>Accueil</h1>")
     } else {
-        console.log(data)
-        fs.writeFile('test.txt', 'Hello World', (err) => {
-
-            fs.readFile('test.txt', 'utf-8', (err, data) => {
-                console.log(data)
-            })
-        })
+        res.writeHead(404, { 'Content-Type': 'text/html' })
+        res.write("<span>Page not found</span>")
     }
-})
+    res.end()
+}).listen(8081)
