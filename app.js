@@ -1,14 +1,8 @@
-require('babel-register')
-const http = require('http') // serveur http
+const mod1 = require('./module1');
 
-http.createServer((req, res) => {
+mod1.sayHello()
+mod1.sayGoodbye()
 
-    if (req.url === '/') {
-        res.writeHead(200, { 'Content-Type': 'text/html' })
-        res.write("<h1>Accueil</h1>")
-    } else {
-        res.writeHead(404, { 'Content-Type': 'text/html' })
-        res.write("<span>Page not found</span>")
-    }
-    res.end()
-}).listen(8081)
+console.log(mod1.helloworld)
+
+console.log(mod1.helloSecondeManiere)
