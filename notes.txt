@@ -1,0 +1,27 @@
+API REST : Representational State Transfer
+
+GET, POST, PUT, DELETE
+CRUD : Create, Read, Update, Delete
+
+Toutes les méthodes
+ GET
+ POST
+ PUT
+ DELETE
+ PATCH
+ HEAD
+ TRACE
+ OPTIONS
+ CONNECT
+ PURGE
+ LINK
+ UNLINK
+
+Un middleware : c'est une fonction qui va s'exécuter entre la requête et la réponse
+Un middleware peut être utilisé pour :
+- Logger les requêtes
+- Parser les données
+- Gérer les erreurs
+- Authentifier les utilisateurs
+- Gérer les sessions
+- Gérer les cookies
