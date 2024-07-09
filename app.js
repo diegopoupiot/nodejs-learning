@@ -1,5 +1,5 @@
 require('babel-register')
-const func = require('./functions')
+const {success, error} = require('./functions')
 const express = require('express')
 const app = express()
 const morgan = require('morgan')
@@ -25,16 +25,24 @@ app.use(bodyParser.json()) // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
 app.get('/api/v1/members/:id', (req, res) => {
-    res.json(func.success(members[(req.params.id)-1].name))
+
+    let index = getIndex(req.params.id)
+
+    if (typeof(index) == 'string') {
+        res.json(error(index))
+    }
+    else {
+        res.json(success(members[index].name))
+    }
 })
 
 app.get('/api/v1/members', (req, res) => {
     if (req.query.max !== undefined && req.query.max > 0) {
-        res.json(func.success(members.slice(0, req.query.max)))
+        res.json(success(members.slice(0, req.query.max)))
     } else if (req.query.max !== undefined) {
-        res.json(func.error('Wrong max value'))
+        res.json(error('Wrong max value'))
     } else {
-        res.json(func.success(members))
+        res.json(success(members))
     }
 })
 
@@ -45,7 +53,7 @@ app.post('/api/v1/members', (req, res) => {
     members.forEach(member => {
         if (member.name === req.body.name) {
             alreadyExists = true
-            return res.json(func.error('Member already exists'))
+            return res.json(error('Member already exists'))
         }
     })
 
@@ -59,11 +67,17 @@ app.post('/api/v1/members', (req, res) => {
         }
 
         members.push(newMember)
-        res.json(func.success(newMember))
-    } else res.json(func.error('Wrong data'))
+        res.json(success(newMember))
+    } else res.json(error('Wrong data'))
 })
 
 app.listen(8081, () => {
     console.log('Server is running on http://localhost:8081')
 })
 
+function getIndex(id) {
+    for (let i = 0; i < members.length; i++) {
+        if (members[i].id == id) return i
+    }
+    return 'Wrong id'
+}
