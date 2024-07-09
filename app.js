@@ -1,13 +1,9 @@
 require('babel-register')
 const express = require('express')
 const app = express()
+const morgan = require('morgan')
 
-
-app.use((req, res, next) => {
-    console.log('Time: %d', Date.now())
-    console.log('URL : ' + req.url)
-    next()
-})
+app.use(morgan('dev'))
 
 app.get('/api', (req, res) => {
     res.send('Root API')
