@@ -1,0 +1,17 @@
+{
+  "dependencies": {
+    "@babel/register": "^7.24.6"
+  },
+  "name": "nodejs-learning",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "ms": "^2.1.3"
+  }
+}
