@@ -3,29 +3,22 @@ require('babel-register')
 
 console.log('Début')
 
-getMember()
-    .then((member) => getArticles(member))
-    .then((articles) => console.log(articles))
-    .catch((err) => console.log(err.message))
+let p1 = new Promise((resolve, reject) => {
+    setTimeout(() => {
+        resolve('p1')
+    }, 1500)
+})
 
-function getMember() {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            // console.log('Member 1')
-            // resolve('Member 1')
+let p2 = new Promise((resolve, reject) => {
+    setTimeout(() => {
+        resolve('p2')
+    }, 3000)
+})
 
-            reject(new Error('Erreur'))
-        }, 1500)
 
-    })
-}
+Promise.race([p1, p2]).then((results) => console.log(results))
 
-function getArticles(member) {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            resolve(['Article 1', 'Article 2', 'Article 3'])
-        }, 1500)
-    })
-}
+//race = la première promesse qui se termine
+//all = toutes les promesses se terminent
 
 console.log('Fin')
