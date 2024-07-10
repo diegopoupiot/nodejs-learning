@@ -36,6 +36,43 @@ app.get('/api/v1/members/:id', (req, res) => {
     }
 })
 
+app.put('/api/v1/members/:id', (req, res) => {
+    let index = getIndex(req.params.id)
+    let same = false
+
+    if (typeof(index) == 'string') {
+        res.json(error(index))
+    }
+    else {
+
+        members.forEach(member => {
+            if (member.name === req.body.name && member.id !== req.params.id) {
+                same = true
+                return
+            }
+        })
+    }
+
+    if (same) {
+        res.json(error('Member already exists'))
+    } else {
+        members[index].name = req.body.name // Update the name
+        res.json(success(members[index]))
+    }
+})
+
+app.delete('/api/v1/members/:id', (req, res) => {
+    let index = getIndex(req.params.id)
+
+    if (typeof(index) == 'string') {
+        res.json(error(index))
+    }
+    else {
+        members.splice(index, 1) // supprime l'élément à l'index
+        res.json(success(members))
+    }
+})
+
 app.get('/api/v1/members', (req, res) => {
     if (req.query.max !== undefined && req.query.max > 0) {
         res.json(success(members.slice(0, req.query.max)))
@@ -60,7 +97,7 @@ app.post('/api/v1/members', (req, res) => {
     if (alreadyExists) return
 
     if (req.body.name) {
-        let id = members.length + 1
+        let id = getLastId()
         let newMember = {
             id: id,
             name: req.body.name
@@ -80,4 +117,8 @@ function getIndex(id) {
         if (members[i].id == id) return i
     }
     return 'Wrong id'
+}
+
+function getLastId() {
+    return members[members.length - 1].id + 1
 }
