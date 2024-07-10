@@ -3,31 +3,29 @@ require('babel-register')
 
 console.log('Début')
 
-let p = new Promise((resolve, reject) => {
+getMember()
+    .then((member) => getArticles(member))
+    .then((articles) => console.log(articles))
+    .catch((err) => console.log(err.message))
 
-    setTimeout(() => {
-        resolve('Success')
-        reject(new Error('Error'))
-    }, 1500)
-})
+function getMember() {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            // console.log('Member 1')
+            // resolve('Member 1')
 
-.then((message) => console.log(message))
-.catch((error) => console.log(error))
+            reject(new Error('Erreur'))
+        }, 1500)
+
+    })
+}
+
+function getArticles(member) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve(['Article 1', 'Article 2', 'Article 3'])
+        }, 1500)
+    })
+}
 
 console.log('Fin')
-
-
-// function getMember(next) {
-//         setTimeout(() => {
-//             next('Member 1')
-//         }, 1500)}
-//
-// function getArticles(member, next) {
-//     setTimeout(() => {
-//         next(['Article 1', 'Article 2', 'Article 3'])
-//     }, 1500)
-// }
-
-// Callbacks
-// Promise
-// Async / Await
