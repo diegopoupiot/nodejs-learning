@@ -1,24 +1,36 @@
 require('babel-register')
 
 
-console.log('Début')
+console.log('Début');
 
-let p1 = new Promise((resolve, reject) => {
-    setTimeout(() => {
-        resolve('p1')
-    }, 1500)
-})
+// getMember()
+//     .then((member) => getArticles(member))
+//     .then((articles) => console.log(articles))
 
-let p2 = new Promise((resolve, reject) => {
-    setTimeout(() => {
-        resolve('p2')
-    }, 3000)
-})
+(async () => {
+    let member = await getMember()
+    let articles = await getArticles(member)
+    console.log(articles)
+})()
 
+function getMember() {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            console.log('Member 1')
+            resolve('Member 1')
 
-Promise.race([p1, p2]).then((results) => console.log(results))
+            //reject(new Error('Erreur'))
+        }, 1500)
 
-//race = la première promesse qui se termine
-//all = toutes les promesses se terminent
+    })
+}
+
+function getArticles(member) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve(['Article 1', 'Article 2', 'Article 3'])
+        }, 1500)
+    })
+}
 
 console.log('Fin')
