@@ -1,5 +1,5 @@
 require('babel-register')
-const {success, error} = require('./assets/functions')
+const {success, error, checkAndChange} = require('./assets/functions')
 const express = require('express')
 const app = express()
 const morgan = require('morgan')('dev')
@@ -21,8 +21,6 @@ const db = mysql.createConnection({
     let MembersRouter = express.Router()
     let Members = require('./assets/classes/members-class')(db, config)
 
-    console.log(Members.getConfig())
-
     app.use(morgan)
     app.use(bodyParser.json()) // for parsing application/json
     app.use(bodyParser.urlencoded({extended: true})) // for parsing application/x-www-form-urlencoded
@@ -30,135 +28,35 @@ const db = mysql.createConnection({
     MembersRouter.route('/:id')
 
         // Recupère un membre par son id
-        .get((req, res) => {
-
-            db.query('SELECT * FROM members WHERE id = ?', [req.params.id], (err, result) => {
-                if (err) {
-                    console.error(err)
-                } else if (result[0] === undefined) {
-                    res.json(error('Unknown id'))
-                } else {
-                    res.json(success(result))
-                }
-            })
+        .get(async (req, res) => {
+            let member = await Members.getByID(req.params.id)
+            res.json(checkAndChange(member))
         })
 
         // Modifie un membre par son id
-        .put((req, res) => {
-
-            if (req.body.name) {
-
-                db.query('SELECT * FROM members WHERE id = ?', [req.params.id], (err, result) => {
-                    if (err) {
-                        res.json(error(err))
-                    } else {
-                        if (result[0] !== undefined) {
-                            db.query('SELECT * FROM members WHERE name = ? AND id != ?', [req.body.name, req.params.id], (err, result) => {
-                                if (err) {
-                                    res.json(error(err))
-                                } else {
-                                    if (result[0] !== undefined) {
-                                        res.json(error('Member already exists'))
-                                    } else {
-                                        db.query('UPDATE members SET name = ? WHERE id = ?', [req.body.name, req.params.id], (err, result) => {
-                                            if (err) {
-                                                res.json(error(err))
-                                            } else {
-                                                res.json(success(result))
-                                            }
-                                        })
-                                    }
-
-                                }
-                            })
-                        } else {
-                            res.json(error('Unknown id'))
-                        }
-                    }
-                })
-
-            }
-
+        .put(async (req, res) => {
+            let updateMember = await Members.modify(req.params.id, req.body.name)
+            res.json(checkAndChange(updateMember))
         })
 
         // Supprime un membre par son id
-        .delete((req, res) => {
-            db.query('SELECT * FROM members WHERE id = ?', [req.params.id], (err, result) => {
-                if (err) {
-                    res.json(error(err))
-                } else if (result[0] !== undefined) {
-                    db.query('DELETE FROM members WHERE id = ?', [req.params.id], (err, result) => {
-                        if (err) {
-                            res.json(error(err))
-                        } else {
-                            res.json(success(result))
-                        }
-                    })
-                } else {
-                    res.json(error('Wrong id'))
-                }
-            })
+        .delete(async (req, res) => {
+            let deleteMember = await Members.delete(req.params.id)
+            res.json(checkAndChange(deleteMember))
         })
 
     MembersRouter.route('/')
 
         // Recupère tous les membres
-        .get((req, res) => {
-            if (req.query.max !== undefined && req.query.max > 0) {
-
-                db.query('SELECT * FROM members LIMIT 0, ?', [req.query.max], (err, result) => {
-                    if (err) {
-                        console.error(err)
-                    } else {
-                        res.json(success(result))
-                    }
-                })
-
-            } else if (req.query.max !== undefined) {
-                res.json(error('Wrong max value'))
-            } else {
-
-                db.query('SELECT * FROM members', (err, result) => {
-                    if (err) {
-                        console.error(err)
-                    } else {
-                        res.json(success(result))
-                    }
-                })
-            }
+        .get(async (req, res) => {
+            let allMembers = await Members.getAll(req.query.max)
+            res.json(checkAndChange(allMembers))
         })
 
         // Ajoute un membre
-        .post((req, res) => {
-
-            let alreadyExists = false
-
-            db.query('SELECT * FROM members WHERE name = ?', [req.body.name], (err, result) => {
-                if (err) {
-                    res.json(error(err))
-                } else if (result[0] !== undefined) {
-                    alreadyExists = true
-                    return res.json(error('Member already exists'))
-                } else {
-                    if (req.body.name) {
-                        db.query('INSERT INTO members(name) VALUES(?)', [req.body.name], (err, result) => {
-                            if (err) {
-                                console.error(err)
-                            } else {
-                                db.query('SELECT * FROM members WHERE name = ?', [req.body.name], (err, result) => {
-                                    if (err) {
-                                        res.json(error(err.message))
-                                    } else {
-                                        res.json(success(result))
-                                    }
-                                })
-                            }
-                        })
-                    } else res.json(error('Wrong data'))
-                }
-            })
-
-
+        .post(async (req, res) => {
+            let addMember = await Members.add(req.body.name)
+            res.json(checkAndChange(addMember))
         })
 
     app.use(config.rootAPI + 'members', MembersRouter) // On laisse l'url a MembersRouter
