@@ -23,7 +23,7 @@
           }
         ],
         "responses": {},
-        "tags": []
+        "tags": ["members"]
       },
       "put": {
         "summary": "/api/v1/members/{id}",
@@ -38,7 +38,7 @@
           }
         ],
         "responses": {},
-        "tags": []
+        "tags": ["members"]
       },
       "delete": {
         "summary": "/api/v1/members/{id}",
@@ -53,21 +53,26 @@
           }
         ],
         "responses": {},
-        "tags": []
+        "tags": ["members"]
       }
     },
     "/api/v1/members": {
       "get": {
         "summary": "/api/v1/members",
         "responses": {},
-        "tags": []
+        "tags": ["members"]
       },
       "post": {
         "summary": "/api/v1/members",
         "responses": {},
-        "tags": []
+        "tags": ["members"]
       }
     }
   },
-  "tags": []
+  "tags": [
+    {
+      "name": "members",
+      "description": "Members API permettant de gérer les membres."
+    }
+  ]
 }

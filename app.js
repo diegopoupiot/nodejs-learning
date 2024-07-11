@@ -1,12 +1,13 @@
 require('babel-register')
-const {success, error, checkAndChange} = require('./assets/functions')
+const {checkAndChange} = require('./assets/functions')
+const mysql = require("mysql2/promise");
 const express = require('express')
 const app = require('express')
 const morgan = require('morgan')('dev')
 const bodyParser = require('body-parser')
+const swaggerUi = require('swagger-ui-express')
+const swaggerDocument = require('./assets/swagger.json')
 const config = require('./assets/config')
-const mysql = require("mysql2/promise");
-const expressoasgenerator = require('express-oas-generator')
 
 const db = mysql.createConnection({
     host: config.db.host,
@@ -23,11 +24,12 @@ const db = mysql.createConnection({
     let Members = require('./assets/classes/members-class')(db, config)
 
     const app = express()
-    expressoasgenerator.init(app, {})
-
     app.use(morgan)
+
     app.use(bodyParser.json()) // for parsing application/json
     app.use(bodyParser.urlencoded({extended: true})) // for parsing application/x-www-form-urlencoded
+    app.use(config.rootAPI + 'api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
+    //http://localhost:8080/api/v1/api-docs/
 
     MembersRouter.route('/:id')
 
