@@ -1,11 +1,12 @@
 require('babel-register')
 const {success, error, checkAndChange} = require('./assets/functions')
 const express = require('express')
-const app = express()
+const app = require('express')
 const morgan = require('morgan')('dev')
 const bodyParser = require('body-parser')
 const config = require('./assets/config')
 const mysql = require("mysql2/promise");
+const expressoasgenerator = require('express-oas-generator')
 
 const db = mysql.createConnection({
     host: config.db.host,
@@ -20,6 +21,9 @@ const db = mysql.createConnection({
 
     let MembersRouter = express.Router()
     let Members = require('./assets/classes/members-class')(db, config)
+
+    const app = express()
+    expressoasgenerator.init(app, {})
 
     app.use(morgan)
     app.use(bodyParser.json()) // for parsing application/json
