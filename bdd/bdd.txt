@@ -1,3 +1,0 @@
-docker-compose up -d -privileged
-
-docker exec -it mysql-container mysql -uuser -ppassword -e "USE nodejs; SHOW TABLES; DESCRIBE members;"

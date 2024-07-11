@@ -12,7 +12,16 @@ function error (message) {
     }
 }
 
+function checkAndChange(obj) {
+    if (!obj || obj instanceof Error) {
+        return error(obj.message);
+    } else {
+        return success(obj);
+    }
+}
+
 module.exports = {
     success,
-    error
+    error,
+    checkAndChange
 }
