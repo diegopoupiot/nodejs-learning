@@ -17,7 +17,7 @@ let Members = class {
                     if (result.length > 0) {
                         next(result[0]);
                     } else {
-                        next(new Error('Member not found'));
+                        next(new Error(config.errors.memberNotFound));
                     }
                 })
                 .catch(err => next(err));
@@ -34,7 +34,7 @@ let Members = class {
                     .catch((err) => next(err))
 
             } else if (max !== undefined) {
-                next(new Error('Wrong max value'))
+                next(new Error(config.errors.wrongMaxValue))
             } else {
 
                 db.query('SELECT * FROM members')
@@ -53,7 +53,7 @@ let Members = class {
                 db.query('SELECT * FROM members WHERE name = ?', [name])
                     .then((result) => {
                         if (result[0].length > 0) {
-                            next(new Error('Member already exists'))
+                            next(new Error(config.errors.nameAlreadyExists))
                             console.log(error(result[0]))
                         } else {
                             console.log(success(result[0]))
@@ -82,13 +82,13 @@ let Members = class {
                         if (result[0].length > 0) {
                             return db.query('SELECT * FROM members WHERE name = ? AND id != ?', [name, id])
                         } else {
-                            next(new Error('Unknown id'))
+                            next(new Error(config.errors.unknownID))
                         }
                     })
                     .catch((err) => next(err))
                     .then((result) => {
                         if (result[0].length > 0) {
-                            next(new Error('Member already exists'))
+                            next(new Error(config.errors.nameAlreadyExists))
                         } else {
                             return db.query('UPDATE members SET name = ? WHERE id = ?', [name, id])
                         }
@@ -101,7 +101,7 @@ let Members = class {
                     })
                     .catch((err) => next(err))
             } else {
-                next(new Error('No name value'))
+                next(new Error(config.errors.noNameValue))
             }
         })
     }
@@ -113,7 +113,7 @@ let Members = class {
                     if (result[0].length > 0) {
                         return db.query('DELETE FROM members WHERE id = ?', [id])
                     } else {
-                        next(new Error('Unknown id'))
+                        next(new Error(config.errors.unknownID))
                     }
                 })
                 .catch((err) => next(err))
