@@ -1,12 +1,14 @@
 services:
   mysql:
-    image: mysql:latest
+    image: mysql:9.0.0
     container_name: mysql-container
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: nodejs
       MYSQL_USER: user
       MYSQL_PASSWORD: password
+      MYSQL_DEFAULT_AUTHENTICATION_PLUGIN: caching_sha2_password
     ports:
       - "3306:3306"
     volumes:
@@ -15,4 +17,3 @@ services:
 
 volumes:
   mysql-data:
-

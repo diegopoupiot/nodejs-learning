@@ -1,0 +1,6 @@
+docker-compose down
+docker-compose up --build
+
+docker exec -it mysql-container mysql -uuser -ppassword -e "USE nodejs; SHOW TABLES; DESCRIBE members;"
+
+docker exec -it mysql-container mysqldump -u root -p rootpassword --all-databases > all_databases.sql
