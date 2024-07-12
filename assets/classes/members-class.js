@@ -14,7 +14,7 @@ let Members = class {
         return new Promise((next) => {
             db.query('SELECT * FROM members WHERE id = ?', [id])
                 .then(result => {
-                    if (result.length > 0) {
+                    if (result[0].length > 0) {
                         next(result[0]);
                     } else {
                         next(new Error(config.errors.memberNotFound));
