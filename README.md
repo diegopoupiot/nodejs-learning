@@ -11,6 +11,7 @@ Ce projet suit mon apprentissage pour la création d'une API REST en utilisant N
 - Intégration d'une base de données MySQL (avec Docker)
 - Gestion des erreurs et de la config
 - Documentation de l'API avec Swagger
+- Frontend qui communique avec notre Back
 
 ## Progression
 
@@ -21,3 +22,4 @@ Ce projet suit mon apprentissage pour la création d'une API REST en utilisant N
 5. Intégration de la base de données MySQL
 6. Gestion des erreurs et messages de configuration
 7. Documentation de l'API avec Swagger
+8. Faire la partie Front-End
